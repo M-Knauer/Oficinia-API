@@ -1,32 +1,50 @@
 package com.marcelo.main.entities;
 
+import org.springframework.format.annotation.NumberFormat;
+import org.springframework.format.annotation.NumberFormat.Style;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.OptBoolean;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity(name = "pecas")
 public class Peca {
 	
 	@Id
 	@Column(name = "codigo_de_barras", precision = 5)
+	@NotNull
 	private Long codigoDeBarras;
 	
+	@NotBlank
 	@Column(nullable = false, length = 50)
 	private String nome;
 	
+	@NotBlank
 	@Column(name = "modelo_do_carro", length = 50)
 	private String modeloDoCarro;
 	
+	@NotBlank
 	@Column(length = 50)
 	private String fabricante;
 	
+	@NotNull
 	@Column(name = "preco_de_custo", columnDefinition = "numeric", precision = 10, scale = 2)
 	private Double precoDeCusto;
 	
+	@NotNull
 	@Column(name = "preco_de_venda", columnDefinition = "numeric", precision = 10, scale = 2, nullable = false)
 	private Double precoDeVenda;
 	
-	@Column(precision = 1)
+	@NotNull
+	@Max(value = 3)
+	@Min(value =  0)
 	private Integer categoria;
 	
 	public Peca() {

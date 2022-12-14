@@ -1,11 +1,14 @@
 package com.marcelo.main.entities;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum Categoria {
 	Funilaria(1),
 	Motor(2),
 	Performance(3),
 	Som(4);
 	
+	@JsonValue
 	private int code;
 
 	private Categoria(int code) {

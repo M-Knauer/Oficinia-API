@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
+import com.marcelo.main.custom.exception.ErroDeNegocioException;
 import com.marcelo.main.entities.Peca;
 import com.marcelo.main.entities.PecaDto;
 import com.marcelo.main.repositories.PecasRepository;
@@ -21,9 +21,9 @@ public class PecasService {
 	PecasRepository pr;
 	
 	@Transactional
-	public void cadastrarPeca(Peca peca) {
+	public void cadastrarPeca(Peca peca) throws ErroDeNegocioException {
 		if (pr.existsById(peca.getCodigoDeBarras()))
-			throw new RuntimeException();
+			throw new ErroDeNegocioException("Peça já existe!", HttpStatus.UNPROCESSABLE_ENTITY);
 		
 		pr.save(peca);
 		
@@ -37,14 +37,14 @@ public class PecasService {
 	}
 	
 	@Transactional(readOnly = true)
-	public PecaDto buscarPeca(Long codBarra) {
+	public PecaDto buscarPeca(Long codBarra) throws ErroDeNegocioException {
 		
 		if (pr.existsById(codBarra)) {
 			Peca peca = pr.findById(codBarra).get();
 			return PecaDto.toDto(peca);
 		}
 		
-		throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		throw new ErroDeNegocioException("Peça não encontrada!", HttpStatus.NOT_FOUND);
 	}
 		
 
@@ -63,18 +63,18 @@ public class PecasService {
 			return;
 		}
 		
-		throw new RuntimeException();
+		throw new ErroDeNegocioException("Peça não existe!", HttpStatus.UNPROCESSABLE_ENTITY);
 		
 	}
 
 	@Transactional
-	public void removerPeca(Long codBarra) {
+	public void removerPeca(Long codBarra) throws ErroDeNegocioException {
 		
 		if (pr.existsById(codBarra)) {
 			pr.deleteById(codBarra);
 			return;
 		}
-		throw new RuntimeException();
+		throw new ErroDeNegocioException("Peça não existe!", HttpStatus.UNPROCESSABLE_ENTITY);
 		
 	}
 }
