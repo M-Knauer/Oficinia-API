@@ -6,9 +6,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.marcelo.main.entities.Peca;
+import com.marcelo.main.entities.PecaDto;
 import com.marcelo.main.repositories.PecasRepository;
 
 @Service
@@ -18,6 +20,7 @@ public class PecasService {
 	@Autowired
 	PecasRepository pr;
 	
+	@Transactional
 	public void cadastrarPeca(Peca peca) {
 		if (pr.existsById(peca.getCodigoDeBarras()))
 			throw new RuntimeException();
@@ -26,18 +29,26 @@ public class PecasService {
 		
 	}
 	
-	public List<Peca> buscarPecas() {
-		return pr.findAll();
+	@Transactional(readOnly = true)
+	public List<PecaDto> buscarPecas() {
+		List<Peca> pecas = pr.findAll();
+		return PecaDto.toDto(pecas);
+		
 	}
 	
-	public Peca buscarPeca(Long codBarra) {
-		if (pr.existsById(codBarra))
-			return pr.findById(codBarra).get();
+	@Transactional(readOnly = true)
+	public PecaDto buscarPeca(Long codBarra) {
+		
+		if (pr.existsById(codBarra)) {
+			Peca peca = pr.findById(codBarra).get();
+			return PecaDto.toDto(peca);
+		}
 		
 		throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 	}
 		
 
+	@Transactional
 	public void alterarPeca(Long codBarra, Peca peca) {
 		if (pr.existsById(codBarra)) {
 			Optional<Peca> pecaUpdate = pr.findById(codBarra);
@@ -56,6 +67,7 @@ public class PecasService {
 		
 	}
 
+	@Transactional
 	public void removerPeca(Long codBarra) {
 		
 		if (pr.existsById(codBarra)) {

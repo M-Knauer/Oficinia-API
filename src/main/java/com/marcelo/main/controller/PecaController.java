@@ -16,9 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.marcelo.main.entities.Peca;
+import com.marcelo.main.entities.PecaDto;
 import com.marcelo.main.services.PecasService;
-
-import jakarta.transaction.Transactional;
 
 @RestController
 @RequestMapping("/pecas")
@@ -28,7 +27,6 @@ public class PecaController {
 	PecasService ps;
 	
 	@PostMapping
-	@Transactional
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public void cadastrarPeca(@RequestBody Peca peca) {
 		try {
@@ -43,7 +41,7 @@ public class PecaController {
 	
 	@GetMapping
 	@ResponseStatus(code = HttpStatus.FOUND)
-	public List<Peca> buscarPecas() {
+	public List<PecaDto> buscarPecas() {
 		try {
 			return ps.buscarPecas();
 			
@@ -55,7 +53,7 @@ public class PecaController {
 	
 	@GetMapping(path = "{codBarra}")
 	@ResponseStatus(code = HttpStatus.FOUND)
-	public Peca buscarPeca(@PathVariable Long codBarra) {
+	public PecaDto buscarPeca(@PathVariable Long codBarra) {
 		try {
 			return ps.buscarPeca(codBarra);
 			
@@ -67,7 +65,6 @@ public class PecaController {
 	}
 	
 	@PutMapping(path = "{codBarra}")
-	@Transactional
 	public void alterarPeca(@PathVariable Long codBarra, @RequestBody Peca peca ) {
 		try {
 			ps.alterarPeca(codBarra, peca);
@@ -79,7 +76,6 @@ public class PecaController {
 	}
 	
 	@DeleteMapping(path = "{codBarra}")
-	@Transactional
 	public void removerPeca(@PathVariable Long codBarra) {
 		try {
 			ps.removerPeca(codBarra);
