@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
-import com.marcelo.main.entities.Peca;
-import com.marcelo.main.entities.PecaDto;
+import com.marcelo.main.dto.GetPecaDto;
+import com.marcelo.main.dto.PostPecaDto;
+import com.marcelo.main.dto.UpdatePecaDto;
 import com.marcelo.main.services.PecasService;
 
 import jakarta.validation.Valid;
@@ -36,33 +36,48 @@ public class PecaController {
 	
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public void cadastrarPeca(@Valid @RequestBody Peca peca) {
-		ps.cadastrarPeca(peca);
+	public void cadastrarPeca(@Valid @RequestBody PostPecaDto dto)  {
+		ps.cadastrarPeca(dto);
 		
 	}
 	
 	@GetMapping
 	@ResponseStatus(code = HttpStatus.FOUND)
-	public List<PecaDto> buscarPecas() {
-		try {
-			return ps.buscarPecas();
-			
-		} catch (RuntimeException e) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-		}
+	public List<GetPecaDto> buscarPecas() {
+		return ps.buscarPecas();
 		
 	}
 	
 	@GetMapping(path = "{codBarra}")
 	@ResponseStatus(code = HttpStatus.FOUND)
-	public PecaDto buscarPeca(@PathVariable Long codBarra) {
+	public GetPecaDto buscarPeca(@PathVariable Long codBarra) {
 		return ps.buscarPeca(codBarra);
 		
 	}
 	
+	@GetMapping(path = "{txt}/comeco")
+	@ResponseStatus(code = HttpStatus.FOUND)
+	public List<GetPecaDto> buscarPorLetraInicial(@PathVariable String txt) {
+		return ps.buscarPorLetraInicial(txt);
+		
+	}
+	
+	@GetMapping(path = "{modelo}/modelo")
+	@ResponseStatus(code = HttpStatus.FOUND)
+	public List<GetPecaDto> buscarPorModelo(@PathVariable String modelo) {
+		return ps.buscarPorModelo(modelo);
+	}
+	
+	@GetMapping(path = "{categoria}/categoria")
+	@ResponseStatus(code = HttpStatus.FOUND)
+	public List<GetPecaDto> buscarPorCategoria(@PathVariable Integer categoria) {
+		return ps.buscarPorCategoria(categoria);
+		
+	}
+	
 	@PutMapping(path = "{codBarra}")
-	public void alterarPeca(@Valid @PathVariable Long codBarra, @RequestBody Peca peca ) {
-		ps.alterarPeca(codBarra, peca);
+	public void alterarPeca(@Valid @PathVariable Long codBarra, @RequestBody UpdatePecaDto dto ) {
+		ps.alterarPeca(codBarra, dto);
 	}
 	
 	@DeleteMapping(path = "{codBarra}")

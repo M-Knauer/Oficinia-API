@@ -1,13 +1,11 @@
 package com.marcelo.main.entities;
 
-import org.springframework.format.annotation.NumberFormat;
-import org.springframework.format.annotation.NumberFormat.Style;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.OptBoolean;
+import org.apache.commons.text.WordUtils;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -18,7 +16,10 @@ import jakarta.validation.constraints.NotNull;
 public class Peca {
 	
 	@Id
-	@Column(name = "codigo_de_barras", precision = 5)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	@Column(name = "codigo_de_barras", precision = 5, unique = true)
 	@NotNull
 	private Long codigoDeBarras;
 	
@@ -43,22 +44,27 @@ public class Peca {
 	private Double precoDeVenda;
 	
 	@NotNull
-	@Max(value = 3)
+	@Column(name = "quantidade_em_estoque")
+	private Integer qtdEstoque;
+	
+	@NotNull
+	@Max(value = 4)
 	@Min(value =  0)
 	private Integer categoria;
 	
 	public Peca() {
 		
 	}
-
+	
 	public Peca(Long codigoDeBarras, String nome, String modeloDoCarro, String fabricante, Double precoDeCusto,
-			Double precoDeVenda, Categoria categoria) {
+			Double precoDeVenda, Integer qtdEstoque, Categoria categoria) {
 		this.codigoDeBarras = codigoDeBarras;
-		this.nome = nome;
-		this.modeloDoCarro = modeloDoCarro;
-		this.fabricante = fabricante;
+		this.nome = WordUtils.capitalize(nome);
+		this.modeloDoCarro = WordUtils.capitalizeFully(modeloDoCarro);
+		this.fabricante = WordUtils.capitalize(fabricante);
 		this.precoDeCusto = precoDeCusto;
 		this.precoDeVenda = precoDeVenda;
+		this.qtdEstoque = qtdEstoque;
 		setCategoria(categoria);
 	}
 
@@ -75,7 +81,7 @@ public class Peca {
 	}
 
 	public void setNome(String nome) {
-		this.nome = nome;
+		this.nome =  WordUtils.capitalize(nome, new char[] {});
 	}
 
 	public String getModeloDoCarro() {
@@ -83,7 +89,7 @@ public class Peca {
 	}
 
 	public void setModeloDoCarro(String modeloDoCarro) {
-		this.modeloDoCarro = modeloDoCarro;
+		this.modeloDoCarro =  WordUtils.capitalizeFully(modeloDoCarro);
 	}
 
 	public String getFabricante() {
@@ -91,7 +97,7 @@ public class Peca {
 	}
 
 	public void setFabricante(String fabricante) {
-		this.fabricante = fabricante;
+		this.fabricante =  WordUtils.capitalizeFully(fabricante);
 	}
 
 	public Double getPrecoDeCusto() {
@@ -108,6 +114,14 @@ public class Peca {
 
 	public void setPrecoDeVenda(Double precoDeVenda) {
 		this.precoDeVenda = precoDeVenda;
+	}
+
+	public Integer getQtdEstoque() {
+		return qtdEstoque;
+	}
+
+	public void setQtdEstoque(Integer qtdEstoque) {
+		this.qtdEstoque = qtdEstoque;
 	}
 
 	public Categoria getCategoria() {
