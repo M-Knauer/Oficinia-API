@@ -1,16 +1,10 @@
 package com.marcelo.main.entities;
 
-import org.apache.commons.text.WordUtils;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 @Entity(name = "pecas")
 public class Peca {
@@ -20,36 +14,32 @@ public class Peca {
 	private Long id;
 	
 	@Column(name = "codigo_de_barras", precision = 5, unique = true)
-	@NotNull
 	private Long codigoDeBarras;
 	
-	@NotBlank
+	
 	@Column(nullable = false, length = 50)
 	private String nome;
 	
-	@NotBlank
+	
 	@Column(name = "modelo_do_carro", length = 50)
 	private String modeloDoCarro;
 	
-	@NotBlank
+	
 	@Column(length = 50)
 	private String fabricante;
 	
-	@NotNull
+	
 	@Column(name = "preco_de_custo", columnDefinition = "numeric", precision = 10, scale = 2)
 	private Double precoDeCusto;
 	
-	@NotNull
+	
 	@Column(name = "preco_de_venda", columnDefinition = "numeric", precision = 10, scale = 2, nullable = false)
 	private Double precoDeVenda;
 	
-	@NotNull
+	
 	@Column(name = "quantidade_em_estoque")
 	private Integer qtdEstoque;
 	
-	@NotNull
-	@Max(value = 4)
-	@Min(value =  0)
 	private Integer categoria;
 	
 	public Peca() {
@@ -59,9 +49,9 @@ public class Peca {
 	public Peca(Long codigoDeBarras, String nome, String modeloDoCarro, String fabricante, Double precoDeCusto,
 			Double precoDeVenda, Integer qtdEstoque, Categoria categoria) {
 		this.codigoDeBarras = codigoDeBarras;
-		this.nome = WordUtils.capitalize(nome);
-		this.modeloDoCarro = WordUtils.capitalizeFully(modeloDoCarro);
-		this.fabricante = WordUtils.capitalize(fabricante);
+		this.nome = nome;
+		this.modeloDoCarro = modeloDoCarro;
+		this.fabricante = fabricante;
 		this.precoDeCusto = precoDeCusto;
 		this.precoDeVenda = precoDeVenda;
 		this.qtdEstoque = qtdEstoque;
@@ -81,7 +71,7 @@ public class Peca {
 	}
 
 	public void setNome(String nome) {
-		this.nome =  WordUtils.capitalize(nome, new char[] {});
+		this.nome = nome;
 	}
 
 	public String getModeloDoCarro() {
@@ -89,7 +79,7 @@ public class Peca {
 	}
 
 	public void setModeloDoCarro(String modeloDoCarro) {
-		this.modeloDoCarro =  WordUtils.capitalizeFully(modeloDoCarro);
+		this.modeloDoCarro = modeloDoCarro;
 	}
 
 	public String getFabricante() {
@@ -97,7 +87,7 @@ public class Peca {
 	}
 
 	public void setFabricante(String fabricante) {
-		this.fabricante =  WordUtils.capitalizeFully(fabricante);
+		this.fabricante = fabricante;
 	}
 
 	public Double getPrecoDeCusto() {

@@ -42,34 +42,29 @@ public class PecaController {
 	}
 	
 	@GetMapping
-	@ResponseStatus(code = HttpStatus.FOUND)
 	public List<GetPecaDto> buscarPecas() {
 		return ps.buscarPecas();
 		
 	}
 	
 	@GetMapping(path = "{codBarra}")
-	@ResponseStatus(code = HttpStatus.FOUND)
 	public GetPecaDto buscarPeca(@PathVariable Long codBarra) {
 		return ps.buscarPeca(codBarra);
 		
 	}
 	
 	@GetMapping(path = "{txt}/comeco")
-	@ResponseStatus(code = HttpStatus.FOUND)
 	public List<GetPecaDto> buscarPorLetraInicial(@PathVariable String txt) {
 		return ps.buscarPorLetraInicial(txt);
 		
 	}
 	
 	@GetMapping(path = "{modelo}/modelo")
-	@ResponseStatus(code = HttpStatus.FOUND)
 	public List<GetPecaDto> buscarPorModelo(@PathVariable String modelo) {
 		return ps.buscarPorModelo(modelo);
 	}
 	
 	@GetMapping(path = "{categoria}/categoria")
-	@ResponseStatus(code = HttpStatus.FOUND)
 	public List<GetPecaDto> buscarPorCategoria(@PathVariable Integer categoria) {
 		return ps.buscarPorCategoria(categoria);
 		

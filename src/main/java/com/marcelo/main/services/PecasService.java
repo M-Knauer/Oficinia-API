@@ -105,7 +105,7 @@ public class PecasService {
 	@Transactional(readOnly = true)
 	public List<GetPecaDto> buscarPorCategoria(Integer categoria) {
 		try {
-			return pr.findByCategoria(categoria).stream().map(peca -> modelMapper.map(peca, GetPecaDto.class)).collect(Collectors.toList());
+			return pr.findByCategoria(categoria).stream().map(peca -> modelMapper.map(peca, GetPecaDto.class)).toList();
 		} catch (MethodArgumentTypeMismatchException e) {
 			throw new ErroDeNegocioException("Só é permitido numeros inteiros para busca de categoria", HttpStatus.BAD_REQUEST);
 		}

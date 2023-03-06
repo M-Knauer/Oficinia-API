@@ -3,40 +3,50 @@ package com.marcelo.main.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.text.WordUtils;
 import org.springframework.beans.BeanUtils;
 
 import com.marcelo.main.entities.Categoria;
 import com.marcelo.main.entities.Peca;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class GetPecaDto {
 
 	private Long codigoDeBarras;
 	
+	@NotBlank(message = "Nome não pode ser vazio")
 	private String nome;
 	
+	@NotBlank(message = "Modelo do carro não pode ser vazio")
 	private String modeloDoCarro;
 	
+	@NotBlank(message = "Fabricante não pode ser vazio")
 	private String fabricante;
 	
+	@NotNull(message = "Quantidade de estoque não pode ser nulo")
 	private Integer qtdEstoque;
-
+	
+	@NotNull(message = "Categoria não pode ser nulo")
 	private Integer categoria;
 	
+	@NotNull(message = "Preço de venda não pode ser nulo")
 	private Double precoDeVenda;
 	
 	public GetPecaDto() {
 		
 	}
 
-	public GetPecaDto(Long codigoDeBarras, String nome, String modeloDoCarro, String fabricante, Integer qtdEstoque, Integer categoria,
-			Double precoDeVenda) {
+	public GetPecaDto(Long codigoDeBarras, String nome, String modeloDoCarro, String fabricante,
+			Double precoDeVenda, Integer qtdEstoque, Categoria categoria) {
 		this.codigoDeBarras = codigoDeBarras;
-		this.nome = nome;
-		this.modeloDoCarro = modeloDoCarro;
-		this.fabricante = fabricante;
-		this.qtdEstoque = qtdEstoque;
-		this.categoria = categoria;
+		this.nome = WordUtils.capitalize(nome);
+		this.modeloDoCarro = WordUtils.capitalizeFully(modeloDoCarro);
+		this.fabricante = WordUtils.capitalize(fabricante);
 		this.precoDeVenda = precoDeVenda;
+		this.qtdEstoque = qtdEstoque;
+		setCategoria(categoria);
 	}
 
 	public Long getCodigoDeBarras() {
@@ -52,7 +62,7 @@ public class GetPecaDto {
 	}
 
 	public void setNome(String nome) {
-		this.nome = nome;
+		this.nome =  WordUtils.capitalize(nome, new char[] {});
 	}
 
 	public String getModeloDoCarro() {
@@ -60,7 +70,7 @@ public class GetPecaDto {
 	}
 
 	public void setModeloDoCarro(String modeloDoCarro) {
-		this.modeloDoCarro = modeloDoCarro;
+		this.modeloDoCarro =  WordUtils.capitalizeFully(modeloDoCarro);
 	}
 
 	public String getFabricante() {
@@ -68,7 +78,15 @@ public class GetPecaDto {
 	}
 
 	public void setFabricante(String fabricante) {
-		this.fabricante = fabricante;
+		this.fabricante =  WordUtils.capitalizeFully(fabricante);
+	}
+
+	public Double getPrecoDeVenda() {
+		return precoDeVenda;
+	}
+
+	public void setPrecoDeVenda(Double precoDeVenda) {
+		this.precoDeVenda = precoDeVenda;
 	}
 
 	public Integer getQtdEstoque() {
@@ -79,14 +97,6 @@ public class GetPecaDto {
 		this.qtdEstoque = qtdEstoque;
 	}
 
-	public Double getPrecoDeVenda() {
-		return precoDeVenda;
-	}
-
-	public void setPrecoDeVenda(Double precoDeVenda) {
-		this.precoDeVenda = precoDeVenda;
-	}
-	
 	public Categoria getCategoria() {
 		return Categoria.valueOf(categoria);
 	}
