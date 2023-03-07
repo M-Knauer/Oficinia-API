@@ -94,7 +94,7 @@ public class PecasService {
 	@Transactional(readOnly = true)
 	public List<GetPecaDto> buscarPorLetraInicial(String txt) {
 		return pr.findByNomeStartingWith(WordUtils.capitalize(txt)).stream().map(peca -> 
-		modelMapper.map(peca, GetPecaDto.class)).collect(Collectors.toList());
+		modelMapper.map(peca, GetPecaDto.class)).toList();
 	}
 	
 	@Transactional(readOnly = true)

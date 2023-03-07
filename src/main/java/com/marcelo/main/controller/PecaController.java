@@ -58,35 +58,35 @@ public class PecaController {
 		
 	}
 	
-	@GetMapping(path = "{codBarra}")
+	@GetMapping(path = "/{codBarra}")
 	public ResponseEntity<GetPecaDto> buscarPeca(@PathVariable Long codBarra) {
 		return ResponseEntity.ok().body(ps.buscarPeca(codBarra));
 		
 	}
 	
-	@GetMapping(path = "{txt}/comeco")
+	@GetMapping(path = "/{txt}/comeco")
 	public List<GetPecaDto> buscarPorLetraInicial(@PathVariable String txt) {
 		return ps.buscarPorLetraInicial(txt);
 		
 	}
 	
-	@GetMapping(path = "{modelo}/modelo")
+	@GetMapping(path = "/{modelo}/modelo")
 	public List<GetPecaDto> buscarPorModelo(@PathVariable String modelo) {
 		return ps.buscarPorModelo(modelo);
 	}
 	
-	@GetMapping(path = "{categoria}/categoria")
+	@GetMapping(path = "/{categoria}/categoria")
 	public List<GetPecaDto> buscarPorCategoria(@PathVariable Integer categoria) {
 		return ps.buscarPorCategoria(categoria);
 		
 	}
 	
-	@PutMapping(path = "{codBarra}")
+	@PutMapping(path = "/{codBarra}")
 	public ResponseEntity<UpdatePecaDto> alterarPeca(@Valid @PathVariable Long codBarra, @RequestBody UpdatePecaDto dto ) {
 		return ResponseEntity.ok().body(ps.alterarPeca(codBarra, dto));
 	}
 	
-	@DeleteMapping(path = "{codBarra}")
+	@DeleteMapping(path = "/{codBarra}")
 	public ResponseEntity<Void> removerPeca(@PathVariable Long codBarra) {
 		ps.removerPeca(codBarra);
 		return ResponseEntity.noContent().build();
