@@ -1,11 +1,15 @@
 package com.marcelo.main.controller;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.marcelo.main.dto.GetPecaDto;
 import com.marcelo.main.dto.PostPecaDto;
@@ -34,22 +39,28 @@ public class PecaController {
 	@Autowired
 	PecasService ps;
 	
-	@PostMapping
-	@ResponseStatus(code = HttpStatus.CREATED)
-	public void cadastrarPeca(@Valid @RequestBody PostPecaDto dto)  {
-		ps.cadastrarPeca(dto);
+	@PostMapping	
+	public ResponseEntity<PostPecaDto> cadastrarPeca(@Valid @RequestBody PostPecaDto dto)  {
+		dto = ps.cadastrarPeca(dto);
+		
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(dto.getId())
+                .toUri();
+        
+		return ResponseEntity.created(uri).body(dto);
 		
 	}
 	
 	@GetMapping
-	public List<GetPecaDto> buscarPecas() {
-		return ps.buscarPecas();
+	public ResponseEntity<Page<GetPecaDto>> buscarPecas(Pageable pageable) {
+		return ResponseEntity.ok().body(ps.buscarPecas(pageable));
 		
 	}
 	
 	@GetMapping(path = "{codBarra}")
-	public GetPecaDto buscarPeca(@PathVariable Long codBarra) {
-		return ps.buscarPeca(codBarra);
+	public ResponseEntity<GetPecaDto> buscarPeca(@PathVariable Long codBarra) {
+		return ResponseEntity.ok().body(ps.buscarPeca(codBarra));
 		
 	}
 	
@@ -71,13 +82,14 @@ public class PecaController {
 	}
 	
 	@PutMapping(path = "{codBarra}")
-	public void alterarPeca(@Valid @PathVariable Long codBarra, @RequestBody UpdatePecaDto dto ) {
-		ps.alterarPeca(codBarra, dto);
+	public ResponseEntity<UpdatePecaDto> alterarPeca(@Valid @PathVariable Long codBarra, @RequestBody UpdatePecaDto dto ) {
+		return ResponseEntity.ok().body(ps.alterarPeca(codBarra, dto));
 	}
 	
 	@DeleteMapping(path = "{codBarra}")
-	public void removerPeca(@PathVariable Long codBarra) {
+	public ResponseEntity<Void> removerPeca(@PathVariable Long codBarra) {
 		ps.removerPeca(codBarra);
+		return ResponseEntity.noContent().build();
 		
 	}
 	

@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import org.apache.commons.text.WordUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,22 +31,23 @@ public class PecasService {
 	ModelMapper modelMapper;
 	
 	@Transactional
-	public void cadastrarPeca(PostPecaDto dto) throws ErroDeNegocioException {
+	public PostPecaDto cadastrarPeca(PostPecaDto dto) throws ErroDeNegocioException {
 		if (pr.existsByCodigoDeBarras(dto.getCodigoDeBarras()))
 			throw new ErroDeNegocioException("Peça já existe!", HttpStatus.UNPROCESSABLE_ENTITY);
 		
 		// converte dto pra entidade
 		Peca peca = modelMapper.map(dto, Peca.class);
 		pr.save(peca);
+		return modelMapper.map(peca, PostPecaDto.class);
 		
 	}
 	
 	@Transactional(readOnly = true)
-	public List<GetPecaDto> buscarPecas() {
+	public Page<GetPecaDto> buscarPecas(Pageable pageable) {
 		
 		//converte entidade pra dto e gera uma lista
-		return pr.findAll().stream().map(peca -> 
-		modelMapper.map(peca, GetPecaDto.class)).collect(Collectors.toList());
+		return pr.findAll(pageable).map(peca -> 
+		modelMapper.map(peca, GetPecaDto.class));
 		
 	}
 	
@@ -61,7 +64,7 @@ public class PecasService {
 		
 
 	@Transactional
-	public void alterarPeca(Long codBarra, UpdatePecaDto dto) {
+	public UpdatePecaDto alterarPeca(Long codBarra, UpdatePecaDto dto) {
 		if (pr.existsByCodigoDeBarras(codBarra)) {
 			Peca peca = pr.findByCodigoDeBarras(codBarra).get();
 			
@@ -69,9 +72,7 @@ public class PecasService {
 			peca.setPrecoDeVenda(dto.getPrecoDeVenda());
 			peca.setQtdEstoque(dto.getQtdEstoque());
 			
-			pr.save(peca);
-			
-			return;
+			return modelMapper.map(pr.save(peca), UpdatePecaDto.class);
 					
 		}
 		
@@ -82,12 +83,12 @@ public class PecasService {
 	@Transactional
 	public void removerPeca(Long codBarra) throws ErroDeNegocioException {
 		
-		if (pr.existsByCodigoDeBarras(codBarra)) {
-			pr.deleteByCodigoDeBarras(codBarra);
-			return;
+		if (!pr.existsByCodigoDeBarras(codBarra)) {
+			
+			throw new ErroDeNegocioException("Peça não existe!", HttpStatus.UNPROCESSABLE_ENTITY);
 		}
-		throw new ErroDeNegocioException("Peça não existe!", HttpStatus.UNPROCESSABLE_ENTITY);
 		
+		pr.deleteByCodigoDeBarras(codBarra);
 	}
 	
 	@Transactional(readOnly = true)
@@ -105,7 +106,11 @@ public class PecasService {
 	@Transactional(readOnly = true)
 	public List<GetPecaDto> buscarPorCategoria(Integer categoria) {
 		try {
-			return pr.findByCategoria(categoria).stream().map(peca -> modelMapper.map(peca, GetPecaDto.class)).toList();
+			return pr.findByCategoria(categoria)
+					.stream()
+					.map(peca -> modelMapper.map(peca, GetPecaDto.class))
+					.toList();
+			
 		} catch (MethodArgumentTypeMismatchException e) {
 			throw new ErroDeNegocioException("Só é permitido numeros inteiros para busca de categoria", HttpStatus.BAD_REQUEST);
 		}

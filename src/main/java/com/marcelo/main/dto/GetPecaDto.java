@@ -14,6 +14,9 @@ import jakarta.validation.constraints.NotNull;
 
 public class GetPecaDto {
 
+	private Long id;
+	
+	@NotNull(message = "Codigo barras não pode ser nulo")
 	private Long codigoDeBarras;
 	
 	@NotBlank(message = "Nome não pode ser vazio")
@@ -38,8 +41,9 @@ public class GetPecaDto {
 		
 	}
 
-	public GetPecaDto(Long codigoDeBarras, String nome, String modeloDoCarro, String fabricante,
+	public GetPecaDto(Long id, Long codigoDeBarras, String nome, String modeloDoCarro, String fabricante,
 			Double precoDeVenda, Integer qtdEstoque, Categoria categoria) {
+		this.id = id;
 		this.codigoDeBarras = codigoDeBarras;
 		this.nome = WordUtils.capitalize(nome);
 		this.modeloDoCarro = WordUtils.capitalizeFully(modeloDoCarro);
@@ -47,6 +51,14 @@ public class GetPecaDto {
 		this.precoDeVenda = precoDeVenda;
 		this.qtdEstoque = qtdEstoque;
 		setCategoria(categoria);
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Long getCodigoDeBarras() {

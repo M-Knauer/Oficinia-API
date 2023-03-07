@@ -35,6 +35,4 @@ public class ErroDeNegocioException extends RuntimeException {
 		this.cod = cod;
 	}
 	
-	
-
 }
