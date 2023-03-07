@@ -8,7 +8,7 @@ A estrutura do projeto é organizada da seguinte forma:
 
 - A pasta src/main/resources contém os arquivos de configuração da aplicação, como o arquivo application.properties que configura o banco de dados PostgreSQL e outras configurações do Spring Boot.
 
-A aplicação utiliza Java 17 e Spring Boot 3, oferecendo um ambiente moderno e robusto para a criação de APIs RESTful. Além disso, a aplicação conta com validação e tratamento de exceções personalizados, ajudando a garantir a integridade dos dados e a segurança da aplicação.
+A aplicação utiliza Java 17 e Spring Boot 3, oferecendo um ambiente moderno e robusto para a criação de APIs REST. Além disso, a aplicação conta com validação e tratamento de exceções personalizados, ajudando a garantir a integridade dos dados e a segurança da aplicação.
 
 É possível buscar por código de barras, modelo do automóvel, letra inicial do nome da peça e categorias de peças. Essas funcionalidades são implementadas através dos endpoints da API e facilitam a pesquisa e a organização das peças na oficina mecânica.
 
